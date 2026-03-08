@@ -262,9 +262,9 @@ export default function App() {
 
         {/* Controls sidebar */}
         <aside className="w-full lg:w-[480px] border-t lg:border-t-0 lg:border-l border-border overflow-y-auto bg-card">
-          <div className="p-4 space-y-3.5">
+          <div className="p-5 space-y-4">
             {/* Presets */}
-            <div className="space-y-1.5">
+            <div className="space-y-3">
               <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                 Presets
               </h3>
@@ -287,7 +287,7 @@ export default function App() {
               settings={settings}
               onChange={setSettings}
               onResetAnimation={handleResetAnimation}
-              hasImage={!!processedImageSrc}
+              hasImage={!!originalImageSrc}
             />
           </div>
         </aside>
