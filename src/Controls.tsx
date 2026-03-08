@@ -97,9 +97,8 @@ export default function Controls({ settings, onChange, onResetAnimation }: Contr
 
   return (
     <div className="space-y-5">
-      <Section title="Color">
+      <Section title="Colour">
         <div className="flex flex-col gap-1.5">
-          <Label className="text-[13px]">Color Mode</Label>
           <Select
             value={settings.colorMode}
             onValueChange={(value) => update('colorMode', value as 'default' | 'light')}
@@ -191,16 +190,13 @@ export default function Controls({ settings, onChange, onResetAnimation }: Contr
         )}
       </Section>
 
-      <Section title="Image Background">
+      <Section title="Background">
         <div className="space-y-3">
           <Toggle
-            label="Remove Image Background (AI)"
+            label="Remove Image Background"
             checked={settings.removeBackground}
             onChange={(v) => update('removeBackground', v)}
           />
-          <p className="text-[11px] text-muted-foreground leading-relaxed">
-            Uses AI to detect and remove the background from your uploaded image
-          </p>
           {settings.removeBackground && (
             <>
               <div className="flex flex-col gap-1.5">

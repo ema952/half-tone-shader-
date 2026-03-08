@@ -2,12 +2,12 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import HalftoneCanvas from './HalftoneCanvas'
 import type { HalftoneCanvasHandle } from './HalftoneCanvas'
 import Controls from './Controls'
-import ExportPanel from './ExportPanel'
 import ImageUpload from './ImageUpload'
 import { DEFAULT_SETTINGS } from './types'
 import type { HalftoneSettings } from './types'
 import { removeBackground } from '@imgly/background-removal'
 import { Button } from '@/components/ui/button'
+import ExportDropdown from './components/ExportDropdown'
 
 const PRESETS: Record<string, Partial<HalftoneSettings>> = {
   'Default': {},
@@ -140,9 +140,17 @@ export default function App() {
         <h1 className="text-[15px] font-semibold tracking-[0.03em] text-foreground" style={{ fontFamily: "'Grotesk Remix', sans-serif" }}>
           Anam Halftone Generator
         </h1>
-        <span className="text-[11px] text-muted-foreground">
-          WebGL shader tool
-        </span>
+        <div className="flex items-center gap-4">
+         
+          <span className="text-[11px] text-muted-foreground">
+            WebGL shader tool
+          </span>
+          <ExportDropdown
+            canvasRef={canvasRef}
+            hasImage={!!processedImageSrc || settings.fillPattern}
+            animationDuration={animationDuration}
+          />
+        </div>
       </header>
 
       <div className="flex-1 flex flex-col lg:flex-row">
@@ -207,12 +215,6 @@ export default function App() {
               settings={settings}
               onChange={setSettings}
               onResetAnimation={handleResetAnimation}
-            />
-
-            <ExportPanel
-              canvasRef={canvasRef}
-              hasImage={!!processedImageSrc || settings.fillPattern}
-              animationDuration={animationDuration}
             />
           </div>
         </aside>
