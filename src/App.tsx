@@ -14,8 +14,9 @@ const PRESETS: Record<string, Partial<HalftoneSettings>> = {
   'Bold': { scale: 18, gamma: 2.5, brightness: 1.3, sparkleIntensity: 0 },
   'Fine': { scale: 5, gamma: 1.2, brightness: 1, sparkleIntensity: 0.3 },
   'Orange Tint': { useTint: true, tintColor: '#FF6200', scale: 12, gamma: 1.8 },
-  'Light Mode': { colorMode: 'light', scale: 10, gamma: 1.5 },
   'Reveal': { reveal: true, revealDelay: 0.2, revealDuration: 2.5, sparkleIntensity: 0.6 },
+  'Light Mode': { colorMode: 'light', scale: 10, gamma: 1.5 },
+  
 }
 
 export default function App() {
@@ -25,13 +26,45 @@ export default function App() {
   const [removedBgImageSrc, setRemovedBgImageSrc] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [imageAspect, setImageAspect] = useState<number | null>(null)
+  const [isDraggingCanvas, setIsDraggingCanvas] = useState(false)
   const canvasRef = useRef<HalftoneCanvasHandle>(null)
+  const canvasFileInputRef = useRef<HTMLInputElement>(null)
 
   const handleImageLoad = useCallback((src: string) => {
     setOriginalImageSrc(src)
     const img = new Image()
     img.onload = () => setImageAspect(img.naturalWidth / img.naturalHeight)
     img.src = src
+  }, [])
+
+  const handleCanvasFile = useCallback((file: File) => {
+    if (!file.type.startsWith('image/')) return
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        handleImageLoad(e.target.result as string)
+      }
+    }
+    reader.readAsDataURL(file)
+  }, [handleImageLoad])
+
+  const handleCanvasDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDraggingCanvas(false)
+    const file = e.dataTransfer.files[0]
+    if (file) handleCanvasFile(file)
+  }, [handleCanvasFile])
+
+  const handleCanvasDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    if (!processedImageSrc && !settings.fillPattern) {
+      setIsDraggingCanvas(true)
+    }
+  }, [processedImageSrc, settings.fillPattern])
+
+  const handleCanvasDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDraggingCanvas(false)
   }, [])
 
   const handleResetAnimation = useCallback(() => {
@@ -140,11 +173,12 @@ export default function App() {
         <h1 className="text-[15px] font-semibold tracking-[0.03em] text-foreground" style={{ fontFamily: "'Grotesk Remix', sans-serif" }}>
           Anam Halftone Generator
         </h1>
-        <div className="flex items-center gap-4">
-         
-          <span className="text-[11px] text-muted-foreground">
-            WebGL shader tool
-          </span>
+        <div className="flex items-center gap-3">
+          <ImageUpload
+            onImageLoad={handleImageLoad}
+            hasImage={!!originalImageSrc}
+            compact
+          />
           <ExportDropdown
             canvasRef={canvasRef}
             hasImage={!!processedImageSrc || settings.fillPattern}
@@ -156,8 +190,31 @@ export default function App() {
       <div className="flex-1 flex flex-col lg:flex-row">
         {/* Preview */}
         <div className="flex-1 flex items-center justify-center p-6 lg:p-10 min-h-[400px] overflow-hidden">
+          <input
+            ref={canvasFileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (file) handleCanvasFile(file)
+            }}
+            className="hidden"
+          />
           <div
-            className="relative rounded-xl overflow-hidden"
+            onClick={() => {
+              if (!processedImageSrc && !settings.fillPattern && !isProcessing) {
+                canvasFileInputRef.current?.click()
+              }
+            }}
+            onDrop={handleCanvasDrop}
+            onDragOver={handleCanvasDragOver}
+            onDragLeave={handleCanvasDragLeave}
+            className={`relative rounded-xl overflow-hidden transition-all ${
+              !processedImageSrc && !settings.fillPattern && !isProcessing
+                ? 'cursor-pointer border-2 border-dashed hover:border-primary/50 ' +
+                  (isDraggingCanvas ? 'border-primary bg-primary/5' : 'border-border')
+                : ''
+            }`}
             style={{
               backgroundColor: settings.previewBgColor,
               ...(imageAspect
@@ -174,25 +231,40 @@ export default function App() {
               settings={settings}
             />
             {!processedImageSrc && !settings.fillPattern && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <p className="text-[13px] text-muted-foreground">
-                  {isProcessing ? 'Processing image...' : 'Upload an image to preview'}
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                {!isProcessing && (
+                  <svg
+                    className="w-12 h-12 text-muted-foreground/50 mb-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                    />
+                  </svg>
+                )}
+                <p className="text-[14px] font-medium text-foreground">
+                  {isProcessing ? 'Processing image...' : 'Click or drop an image to start'}
                 </p>
+                {!isProcessing && (
+                  <p className="text-[12px] text-muted-foreground mt-1">
+                    PNG, JPG, GIF up to 10MB
+                  </p>
+                )}
               </div>
             )}
           </div>
         </div>
 
         {/* Controls sidebar */}
-        <aside className="w-full lg:w-[320px] border-t lg:border-t-0 lg:border-l border-border overflow-y-auto bg-card">
-          <div className="p-5 space-y-6">
-            <ImageUpload
-              onImageLoad={handleImageLoad}
-              hasImage={!!originalImageSrc}
-            />
-
+        <aside className="w-full lg:w-[480px] border-t lg:border-t-0 lg:border-l border-border overflow-y-auto bg-card">
+          <div className="p-4 space-y-3.5">
             {/* Presets */}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                 Presets
               </h3>
@@ -215,6 +287,7 @@ export default function App() {
               settings={settings}
               onChange={setSettings}
               onResetAnimation={handleResetAnimation}
+              hasImage={!!processedImageSrc}
             />
           </div>
         </aside>

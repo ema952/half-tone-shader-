@@ -133,3 +133,26 @@
     @apply font-sans;
   }
 }
+
+/* Smooth animations for control elements appearing/disappearing */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.control-enter {
+  animation: slideIn 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .control-enter {
+    animation: none;
+  }
+}

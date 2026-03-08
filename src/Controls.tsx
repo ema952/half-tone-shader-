@@ -14,6 +14,7 @@ interface ControlsProps {
   settings: HalftoneSettings
   onChange: (settings: HalftoneSettings) => void
   onResetAnimation: () => void
+  hasImage: boolean
 }
 
 function Slider({
@@ -32,7 +33,7 @@ function Slider({
   onChange: (v: number) => void
 }) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
         <Label className="text-[13px]">{label}</Label>
         <span className="text-[12px] text-muted-foreground tabular-nums font-mono">
@@ -55,20 +56,26 @@ function Toggle({
   label,
   checked,
   onChange,
+  disabled = false,
 }: {
   label: string
   checked: boolean
   onChange: (v: boolean) => void
+  disabled?: boolean
 }) {
   return (
     <div className="flex items-center justify-between">
-      <Label htmlFor={label} className="text-[13px] cursor-pointer">
+      <Label
+        htmlFor={label}
+        className={`text-[13px] ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+      >
         {label}
       </Label>
       <Switch
         id={label}
         checked={checked}
         onCheckedChange={onChange}
+        disabled={disabled}
       />
     </div>
   )
@@ -85,7 +92,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-export default function Controls({ settings, onChange, onResetAnimation }: ControlsProps) {
+export default function Controls({ settings, onChange, onResetAnimation, hasImage }: ControlsProps) {
   const update = <K extends keyof HalftoneSettings>(
     key: K,
     value: HalftoneSettings[K]
@@ -96,7 +103,7 @@ export default function Controls({ settings, onChange, onResetAnimation }: Contr
   const isLight = settings.colorMode === 'light'
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <Section title="Colour">
         <div className="flex flex-col gap-1.5">
           <Select
@@ -137,7 +144,7 @@ export default function Controls({ settings, onChange, onResetAnimation }: Contr
         )}
 
         {!isLight && settings.useTint && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 control-enter">
             <input
               type="color"
               value={settings.tintColor}
@@ -169,28 +176,62 @@ export default function Controls({ settings, onChange, onResetAnimation }: Contr
           onChange={(v) => update('gamma', v)}
         />
         {!isLight && !settings.useTint && (
-          <Slider
-            label="Saturation"
-            value={settings.saturation}
-            min={0}
-            max={2}
-            step={0.05}
-            onChange={(v) => update('saturation', v)}
-          />
+          <div className="control-enter">
+            <Slider
+              label="Saturation"
+              value={settings.saturation}
+              min={0}
+              max={2}
+              step={0.05}
+              onChange={(v) => update('saturation', v)}
+            />
+          </div>
         )}
         {!isLight && (
-          <Slider
-            label="Brightness"
-            value={settings.brightness}
-            min={0.5}
-            max={3}
-            step={0.05}
-            onChange={(v) => update('brightness', v)}
-          />
+          <div className="control-enter">
+            <Slider
+              label="Brightness"
+              value={settings.brightness}
+              min={0.5}
+              max={3}
+              step={0.05}
+              onChange={(v) => update('brightness', v)}
+            />
+          </div>
         )}
       </Section>
 
       <Section title="Background">
+      {!isLight && (
+          <div className="space-y-3">
+            <Toggle
+              label="White Background Fill"
+              checked={settings.background}
+              onChange={(v) => update('background', v)}
+            />
+            <p className="text-[11px] text-muted-foreground">
+              Adds white fill behind halftone dots
+            </p>
+          </div>
+        )}
+        <Toggle
+          label="Fill Empty Areas"
+          checked={settings.fillPattern}
+          onChange={(v) => update('fillPattern', v)}
+          disabled={!hasImage}
+        />
+        {settings.fillPattern && (
+          <div className="control-enter">
+            <Slider
+              label="Pattern Opacity"
+              value={settings.patternOpacity}
+              min={0.05}
+              max={1}
+              step={0.05}
+              onChange={(v) => update('patternOpacity', v)}
+            />
+          </div>
+        )}
         <div className="space-y-3">
           <Toggle
             label="Remove Image Background"
@@ -198,7 +239,7 @@ export default function Controls({ settings, onChange, onResetAnimation }: Contr
             onChange={(v) => update('removeBackground', v)}
           />
           {settings.removeBackground && (
-            <>
+            <div className="control-enter space-y-3">
               <div className="flex flex-col gap-1.5">
                 <Label className="text-[13px]">Replacement</Label>
                 <Select
@@ -215,7 +256,7 @@ export default function Controls({ settings, onChange, onResetAnimation }: Contr
                 </Select>
               </div>
               {settings.backgroundType === 'color' && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 control-enter">
                   <input
                     type="color"
                     value={settings.backgroundColor}
@@ -227,39 +268,9 @@ export default function Controls({ settings, onChange, onResetAnimation }: Contr
                   </span>
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
-      </Section>
-
-      <Section title="Halftone Pattern">
-        {!isLight && (
-          <div className="space-y-1.5">
-            <Toggle
-              label="White Background Fill"
-              checked={settings.background}
-              onChange={(v) => update('background', v)}
-            />
-            <p className="text-[11px] text-muted-foreground">
-              Adds white fill behind halftone dots
-            </p>
-          </div>
-        )}
-        <Toggle
-          label="Fill Empty Areas"
-          checked={settings.fillPattern}
-          onChange={(v) => update('fillPattern', v)}
-        />
-        {settings.fillPattern && (
-          <Slider
-            label="Pattern Opacity"
-            value={settings.patternOpacity}
-            min={0.05}
-            max={1}
-            step={0.05}
-            onChange={(v) => update('patternOpacity', v)}
-          />
-        )}
       </Section>
 
       <Section title="Animation">
@@ -272,7 +283,7 @@ export default function Controls({ settings, onChange, onResetAnimation }: Contr
           }}
         />
         {settings.reveal && (
-          <>
+          <div className="control-enter space-y-2">
             <Slider
               label="Reveal Delay"
               value={settings.revealDelay}
@@ -289,7 +300,7 @@ export default function Controls({ settings, onChange, onResetAnimation }: Contr
               step={0.1}
               onChange={(v) => update('revealDuration', v)}
             />
-          </>
+          </div>
         )}
         <Slider
           label="Sparkle"

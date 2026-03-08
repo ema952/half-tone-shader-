@@ -113,13 +113,13 @@ export default function ExportDropdown({ canvasRef, hasImage, animationDuration 
               <span>Export as Video</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={handleExportEmbed}
               className="gap-2 cursor-pointer"
             >
               <FileHtml className="size-4" />
               <span>Export as Embed</span>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       )}
