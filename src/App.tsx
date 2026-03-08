@@ -137,7 +137,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background flex flex-col dark">
       <header className="flex items-center justify-between px-6 py-4 border-b border-border">
-        <h1 className="text-[15px] font-semibold tracking-tight text-foreground">
+        <h1 className="text-[15px] font-semibold tracking-[0.03em] text-foreground" style={{ fontFamily: "'Grotesk Remix', sans-serif" }}>
           Anam Halftone Generator
         </h1>
         <span className="text-[11px] text-muted-foreground">
