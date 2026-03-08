@@ -10,6 +10,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     border-color: var(--border);
+    @apply border-border outline-ring/50;
   }
 
   *:focus-visible {
@@ -35,7 +36,7 @@
     background: #fff;
     cursor: pointer;
     border: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.4);
   }
 
   input[type="range"]::-moz-range-thumb {
