@@ -76,16 +76,17 @@ export function useExport() {
 
       resetAnimation()
 
-      const stream = canvas.captureStream(30)
+      const stream = canvas.captureStream(60)
       const chunks: BlobPart[] = []
 
-      const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
-        ? 'video/webm;codecs=vp9'
+      // VP8 handles WebGL canvas color space correctly — VP9 produces green/chroma artifacts
+      const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp8')
+        ? 'video/webm;codecs=vp8'
         : 'video/webm'
 
       const recorder = new MediaRecorder(stream, {
         mimeType,
-        videoBitsPerSecond: 5_000_000,
+        videoBitsPerSecond: 40_000_000,
       })
       mediaRecorderRef.current = recorder
 
