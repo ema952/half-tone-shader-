@@ -10,13 +10,12 @@ import { Button } from '@/components/ui/button'
 import ExportDropdown from './components/ExportDropdown'
 
 const PRESETS: Record<string, Partial<HalftoneSettings>> = {
-  'Default': {},
-  'Bold': { scale: 18, gamma: 2.5, brightness: 1.3, sparkleIntensity: 0 },
-  'Fine': { scale: 5, gamma: 1.2, brightness: 1, sparkleIntensity: 0.3 },
-  'Orange Tint': { useTint: true, tintColor: '#FF6200', scale: 12, gamma: 1.8 },
-  'Reveal': { reveal: true, revealDelay: 0.2, revealDuration: 2.5, sparkleIntensity: 0.6 },
-  'Light Mode': { colorMode: 'light', scale: 10, gamma: 1.5 },
-  
+  'Default': { background: false },
+  'Bold': { scale: 18, gamma: 2.5, brightness: 1.3, sparkleIntensity: 0, background: false },
+  'Fine': { scale: 5, gamma: 1.2, brightness: 1, sparkleIntensity: 0.3, background: false },
+  'Orange Tint': { useTint: true, tintColor: '#FF6200', scale: 12, gamma: 1.8, background: false },
+  'Reveal': { reveal: true, revealDelay: 0.2, revealDuration: 2.5, sparkleIntensity: 0.6, background: false },
+  'Light Mode': { colorMode: 'light', scale: 10, gamma: 1.5, background: false },
 }
 
 export default function App() {
@@ -171,7 +170,7 @@ export default function App() {
     <div className="min-h-screen bg-background flex flex-col dark">
       <header className="flex items-center justify-between px-6 py-4 border-b border-border">
         <h1 className="text-[15px] font-semibold tracking-[0.03em] text-foreground" style={{ fontFamily: "'Grotesk Remix', sans-serif" }}>
-          Anam Halftone Generator
+          <a href="https://anam.ai" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">Anam</a> Halftone Generator
         </h1>
         <div className="flex items-center gap-3">
           <ImageUpload

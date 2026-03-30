@@ -1,0 +1,4 @@
+export { default as HalftoneCanvas } from './HalftoneCanvas'
+export type { HalftoneCanvasHandle } from './HalftoneCanvas'
+export type { HalftoneSettings } from './types'
+export { DEFAULT_SETTINGS } from './types'

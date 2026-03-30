@@ -25,7 +25,7 @@ export const DEFAULT_SETTINGS: HalftoneSettings = {
   useTint: false,
   tintColor: '#FF6200',
   previewBgColor: '#0a0a0a',
-  scale: 10,
+  scale: 14,
   gamma: 1.5,
   saturation: 1,
   brightness: 1,
