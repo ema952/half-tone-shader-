@@ -1,26 +1,22 @@
-# anam-halftone-shader
+# @anam-ai/halftone-shader
 
 A React component that renders a real-time WebGL halftone effect on images. No pre-exported files — the effect runs live in the browser on a `<canvas>` element, making it the right format for web applications.
 
 
-https://github.com/user-attachments/assets/af32232e-49bd-4443-b534-24a186a06d39
-
-
+![anam halftone shader demo](src/assets/anam-halftone-shader-demo.gif)
 
 Demo: [half-tone-shader.vercel.app](https://half-tone-shader.vercel.app)
-
-
 
 ## Install
 
 ```bash
-npm install anam-halftone-shader
+npm install @anam-ai/halftone-shader
 ```
 
 ## Usage
 
 ```tsx
-import { HalftoneCanvas, DEFAULT_SETTINGS } from 'anam-halftone-shader'
+import { HalftoneCanvas, DEFAULT_SETTINGS } from '@anam-ai/halftone-shader'
 
 function App() {
   return (
@@ -41,7 +37,7 @@ The canvas fills its parent container. Size it with CSS.
 Pass a `settings` object to control the effect. Start with `DEFAULT_SETTINGS` and override what you need:
 
 ```tsx
-import { HalftoneCanvas, DEFAULT_SETTINGS } from 'anam-halftone-shader'
+import { HalftoneCanvas, DEFAULT_SETTINGS } from '@anam-ai/halftone-shader'
 
 const settings = {
   ...DEFAULT_SETTINGS,
@@ -76,7 +72,7 @@ Use the ref to access the underlying canvas (e.g. to export a frame) or reset th
 
 ```tsx
 import { useRef } from 'react'
-import { HalftoneCanvas, HalftoneCanvasHandle } from 'anam-halftone-shader'
+import { HalftoneCanvas, HalftoneCanvasHandle } from '@anam-ai/halftone-shader'
 
 function App() {
   const ref = useRef<HalftoneCanvasHandle>(null)
