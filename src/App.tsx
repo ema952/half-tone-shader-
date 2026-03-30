@@ -170,7 +170,7 @@ export default function App() {
     <div className="min-h-screen bg-background flex flex-col dark">
       <header className="flex items-center justify-between px-6 py-4 border-b border-border">
         <h1 className="text-[15px] font-semibold tracking-[0.03em] text-foreground" style={{ fontFamily: "'Grotesk Remix', sans-serif" }}>
-          <a href="https://anam.ai" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">Anam</a> Halftone Generator
+          <a href="https://anam.ai?utm_source=anamshader" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">Anam</a> Halftone Generator
         </h1>
         <div className="flex items-center gap-3">
           <ImageUpload
