@@ -2,9 +2,14 @@
 
 A React component that renders a real-time WebGL halftone effect on images. No pre-exported files — the effect runs live in the browser on a `<canvas>` element, making it the right format for web applications.
 
+
+https://github.com/user-attachments/assets/af32232e-49bd-4443-b534-24a186a06d39
+
+
+
 Demo: [half-tone-shader.vercel.app](https://half-tone-shader.vercel.app)
 
-<video src="src/assets/anam half tone shader.mp4" autoplay loop muted playsinline width="100%"></video>
+
 
 ## Install
 
